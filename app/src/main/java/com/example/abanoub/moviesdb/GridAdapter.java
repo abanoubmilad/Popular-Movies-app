@@ -12,9 +12,9 @@ import com.squareup.picasso.Picasso;
 import java.util.List;
 
 
-public class GridAdapter extends ArrayAdapter<String> {
-    public GridAdapter(Activity context, List<String> urls) {
-        super(context, 0, urls);
+public class GridAdapter extends ArrayAdapter<Movie> {
+    public GridAdapter(Activity context, List<Movie> movies) {
+        super(context, 0, movies);
     }
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
@@ -24,7 +24,7 @@ public class GridAdapter extends ArrayAdapter<String> {
         }
         Picasso
                 .with(getContext())
-                .load("http://image.tmdb.org/t/p/w185" + getItem(position))
+                .load("http://image.tmdb.org/t/p/w185" + getItem(position).getPoster_path())
                 .error(R.mipmap.ic_launcher)
                 .into((ImageView) convertView);
         return convertView;

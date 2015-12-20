@@ -15,11 +15,15 @@
     <string name="title">title</string>
     <string name="vote_average">vote average</string>
     <string name="vote_count">vote count</string>
+    <string name="trailers">Trailers:</string>
+    <string name="reviews">Reviews:</string>
+    <string name="favourite">MARK AS\nFAVOURITE</string>
 
 
     <string-array name="display_by">
         <item>most popular</item>
         <item>highest rated</item>
+        <item>favourites</item>
     </string-array>
     <string name="title_activity_details">Details</string>
 </resources>

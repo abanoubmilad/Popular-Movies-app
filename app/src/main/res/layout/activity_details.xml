@@ -50,6 +50,8 @@
                     android:layout_gravity="center_vertical"
                     android:orientation="vertical">
 
+
+
                     <TextView
                         style="@style/tag_style"
                         android:layout_width="wrap_content"
@@ -87,7 +89,14 @@
                         style="@style/text_style"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content" />
-
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="#34495e"
+                        android:text="@string/favourite"
+                        android:id="@+id/favourite"
+                        android:textColor="#ffffff"
+                        android:padding="10dp"/>
 
                 </LinearLayout>
 
@@ -106,6 +115,28 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 
+            <TextView
+                style="@style/tag_style"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/trailers" />
+
+
+            <ListView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/trailers_listView" />
+
+            <TextView
+                style="@style/tag_style"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/reviews"/>
+
+            <ListView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/reviews_listView" />
 
             <LinearLayout
                 android:layout_width="match_parent"

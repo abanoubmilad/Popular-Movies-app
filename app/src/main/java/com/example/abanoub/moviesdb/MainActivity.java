@@ -22,17 +22,15 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.List;
 
 public class MainActivity extends ActionBarActivity {
-    private Movie [] movies;
     private GridAdapter gridadapter;
-    public class FetchMoviesTask extends AsyncTask<String, Void, List <String>> {
+    public class FetchMoviesTask extends AsyncTask<String, Void, ArrayList<Movie>> {
 
-        private List <String> getMoviesDataFromJson(String moviesJsonStr)
+        private ArrayList<Movie> getMoviesDataFromJson(String moviesJsonStr)
                 throws JSONException {
 
-            // These are the names of the JSON objects that need to be extracted.
+// These are the names of the JSON objects that need to be extracted.
 //            "page"
 //            "results"
 //            "adult"
@@ -50,40 +48,32 @@ public class MainActivity extends ActionBarActivity {
 //            "vote_average"
 //            "vote_count"
 
-            JSONObject moviesJson = new JSONObject(moviesJsonStr);
-            JSONArray moviesArray = moviesJson.getJSONArray("results");
-
-
-            movies = new Movie [moviesArray.length()];
-            List <String> movieUrls = new ArrayList<>(moviesArray.length());
+            JSONArray moviesArray = new JSONObject(moviesJsonStr).getJSONArray("results");
+            ArrayList<Movie> movies = new ArrayList<>(moviesArray.length());
+            JSONObject movie;
             for (int i = 0; i < moviesArray.length(); i++) {
-                JSONObject movie = moviesArray.getJSONObject(i);
-                movies[i]=new Movie(movie.getString("backdrop_path"),
+                movie = moviesArray.getJSONObject(i);
+                movies.add(new Movie(movie.getString("backdrop_path"),
                         movie.getString("id"), movie.getString("original_language"),
                         movie.getString("original_title"),movie.getString("overview"),
                         movie.getString("release_date"), movie.getString("poster_path"),
                         movie.getString("popularity"), movie.getString("title"),
                         movie.getString("vote_average"), movie.getString("vote_count"),
                         movie.getString("genre_ids"),movie.getString("adult").equals("true"),
-                        movie.getString("video").equals("true"));
+                        movie.getString("video").equals("true")));
+             }
 
-                    movieUrls.add(movie.getString("poster_path"));
-                }
-
-
-
-            return movieUrls;
+            return movies;
 
         }
         @Override
-        protected List <String> doInBackground(String... params) {
+        protected ArrayList<Movie> doInBackground(String... params) {
             HttpURLConnection urlConnection = null;
             BufferedReader reader = null;
-
             String moviesJsonStr = null;
 
             try {
-                URL url = new URL("https://api.themoviedb.org/3/discover/movie?api_key=a33a652812714b13f3a679e7a990d1ea&sort_by="+params[0]);
+                URL url = new URL("https://api.themoviedb.org/3/discover/movie?api_key="+BuildConfig.THE_MOVIE_DB_API_KEY+"&sort_by="+params[0]);
 
                 urlConnection = (HttpURLConnection) url.openConnection();
                 urlConnection.setRequestMethod("GET");
@@ -128,9 +118,9 @@ public class MainActivity extends ActionBarActivity {
         }
 
         @Override
-        protected void onPostExecute(List <String> result) {
+        protected void onPostExecute(ArrayList<Movie> movies) {
             gridadapter.clear();
-            gridadapter.addAll(result);
+            gridadapter.addAll(movies);
         }
     }
     @Override
@@ -138,14 +128,14 @@ public class MainActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         GridView grid =(GridView) findViewById(R.id.grid_view);
-        gridadapter=new GridAdapter(this,new ArrayList<String>(0));
+        gridadapter=new GridAdapter(this,new ArrayList<Movie>(0));
         grid.setAdapter(gridadapter);
 
         grid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent intent = new Intent(getApplicationContext() ,DetailsActivity.class);
-                intent.putExtra("movie",movies[position]);
+                intent.putExtra("movie",gridadapter.getItem(position));
                 startActivity(intent);
             }
         });
@@ -171,19 +161,13 @@ public class MainActivity extends ActionBarActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
         }
