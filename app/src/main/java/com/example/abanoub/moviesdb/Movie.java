@@ -11,7 +11,10 @@ public class Movie implements Serializable {
             vote_average, vote_count, genre_ids;
     private boolean isAdult, hasVideo;
 
-    public Movie(String backdrop_path, String id, String original_language, String original_title, String overview, String release_date, String poster_path, String popularity, String title, String vote_average, String vote_count, String genre_ids, boolean isAdult, boolean hasVideo) {
+    public Movie(String backdrop_path, String id, String original_language, String original_title,
+                 String overview, String release_date, String poster_path, String popularity,
+                 String title, String vote_average, String vote_count, String genre_ids, boolean isAdult, boolean hasVideo) {
+
         this.backdrop_path = backdrop_path;
         this.id = id;
         this.original_language = original_language;
@@ -140,7 +143,6 @@ public class Movie implements Serializable {
     public void setHasVideo(boolean hasVideo) {
         this.hasVideo = hasVideo;
     }
-
 
 
 }

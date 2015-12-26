@@ -124,7 +124,7 @@
 
             <ListView
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="60dp"
                 android:id="@+id/trailers_listView" />
 
             <TextView
@@ -135,7 +135,7 @@
 
             <ListView
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="120dp"
                 android:id="@+id/reviews_listView" />
 
             <LinearLayout

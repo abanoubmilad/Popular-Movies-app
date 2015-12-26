@@ -25,6 +25,61 @@ import java.util.ArrayList;
 
 public class MainActivity extends ActionBarActivity {
     private GridAdapter gridadapter;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+        GridView grid =(GridView) findViewById(R.id.grid_view);
+        gridadapter=new GridAdapter(this,new ArrayList<Movie>(0));
+        grid.setAdapter(gridadapter);
+
+        grid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent intent = new Intent(getApplicationContext() ,DetailsActivity.class);
+                intent.putExtra("movie",gridadapter.getItem(position));
+                startActivity(intent);
+            }
+        });
+
+        Spinner spin = (Spinner) findViewById(R.id.spin);
+        spin.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if (position == 0)
+                    new FetchMoviesTask().execute("popularity.desc");
+                else if(position==1)
+                    new FetchMoviesTask().execute("vote_average.desc");
+                else
+                    new FetchFavouriteMoviesTask().execute();
+
+
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if (id == R.id.action_settings) {
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
     public class FetchMoviesTask extends AsyncTask<String, Void, ArrayList<Movie>> {
 
         private ArrayList<Movie> getMoviesDataFromJson(String moviesJsonStr)
@@ -61,7 +116,7 @@ public class MainActivity extends ActionBarActivity {
                         movie.getString("vote_average"), movie.getString("vote_count"),
                         movie.getString("genre_ids"),movie.getString("adult").equals("true"),
                         movie.getString("video").equals("true")));
-             }
+            }
 
             return movies;
 
@@ -123,55 +178,18 @@ public class MainActivity extends ActionBarActivity {
             gridadapter.addAll(movies);
         }
     }
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        GridView grid =(GridView) findViewById(R.id.grid_view);
-        gridadapter=new GridAdapter(this,new ArrayList<Movie>(0));
-        grid.setAdapter(gridadapter);
+    public class FetchFavouriteMoviesTask extends AsyncTask<Void, Void, ArrayList<Movie>> {
+        @Override
+        protected ArrayList<Movie> doInBackground(Void... params) {
+            MoviesDBHelper mdb = MoviesDBHelper.getInstance(getApplicationContext());
+            return mdb.getMovies();
 
-        grid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent intent = new Intent(getApplicationContext() ,DetailsActivity.class);
-                intent.putExtra("movie",gridadapter.getItem(position));
-                startActivity(intent);
-            }
-        });
-
-        Spinner spin = (Spinner) findViewById(R.id.spin);
-        spin.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                if (position == 0)
-                    new FetchMoviesTask().execute("popularity.desc");
-                else
-                    new FetchMoviesTask().execute("vote_average.desc");
-
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        if (id == R.id.action_settings) {
-            return true;
         }
 
-        return super.onOptionsItemSelected(item);
+        @Override
+        protected void onPostExecute(ArrayList<Movie> movies) {
+            gridadapter.clear();
+            gridadapter.addAll(movies);
+        }
     }
 }

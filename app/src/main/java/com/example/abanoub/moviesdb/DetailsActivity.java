@@ -8,11 +8,13 @@ import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 
@@ -32,13 +34,23 @@ import java.util.ArrayList;
 public class DetailsActivity extends ActionBarActivity {
     private ReviewsAdapter reviewsAdapter;
     private TrailersAdapter trailersAdapter;
+    private Movie movie;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_details);
 
-        Movie movie = (Movie)getIntent().getSerializableExtra("movie");
+        movie = (Movie)getIntent().getSerializableExtra("movie");
         TextView adult =  (TextView) findViewById(R.id.adult);
+
+        TextView favourite_btn =  (TextView) findViewById(R.id.favourite);
+        favourite_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new AddFavouriteMovieTask().execute();
+            }
+        });
+
         if(movie.isAdult())
             adult.setText("yes");
         else
@@ -86,25 +98,67 @@ public class DetailsActivity extends ActionBarActivity {
         trailersList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                String key = ((Trailer)parent.getItemAtPosition(position)).getKey();
-                try{
+                String key = ((Trailer) parent.getItemAtPosition(position)).getKey();
+                try {
                     startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("vnd.youtube:" + key)));
-                }catch (ActivityNotFoundException e){
-                    Intent intent=new Intent(Intent.ACTION_VIEW,
-                            Uri.parse("http://www.youtube.com/watch?v="+key));
+                } catch (ActivityNotFoundException e) {
+                    Intent intent = new Intent(Intent.ACTION_VIEW,
+                            Uri.parse("http://www.youtube.com/watch?v=" + key));
                     startActivity(intent);
                 }
+            }
+        });
+        trailersList.setOnTouchListener(new ListView.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                int action = event.getAction();
+                switch (action) {
+                    case MotionEvent.ACTION_DOWN:
+                        // Disallow ScrollView to intercept touch events.
+                        v.getParent().requestDisallowInterceptTouchEvent(true);
+                        break;
+
+                    case MotionEvent.ACTION_UP:
+                        // Allow ScrollView to intercept touch events.
+                        v.getParent().requestDisallowInterceptTouchEvent(false);
+                        break;
+                }
+
+                // Handle ListView touch events.
+                v.onTouchEvent(event);
+                return true;
             }
         });
         ListView reviewsList = (ListView) findViewById(R.id.reviews_listView);
         reviewsAdapter = new ReviewsAdapter(this,new ArrayList<Review>(0));
         reviewsList.setAdapter(reviewsAdapter);
+        reviewsList.setOnTouchListener(new ListView.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                int action = event.getAction();
+                switch (action) {
+                    case MotionEvent.ACTION_DOWN:
+                        // Disallow ScrollView to intercept touch events.
+                        v.getParent().requestDisallowInterceptTouchEvent(true);
+                        break;
 
+                    case MotionEvent.ACTION_UP:
+                        // Allow ScrollView to intercept touch events.
+                        v.getParent().requestDisallowInterceptTouchEvent(false);
+                        break;
+                }
+
+                // Handle ListView touch events.
+                v.onTouchEvent(event);
+                return true;
+            }
+        });
         new FetchReviewsTask().execute(movie.getId());
         new FetchTrailersTask().execute(movie.getId());
 
 
     }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -279,6 +333,23 @@ public class DetailsActivity extends ActionBarActivity {
         protected void onPostExecute(ArrayList<Trailer> trailers) {
             trailersAdapter.clear();
             trailersAdapter.addAll(trailers);
+        }
+    }
+    public class AddFavouriteMovieTask extends AsyncTask<Void, Void,Boolean> {
+        @Override
+        protected Boolean doInBackground(Void... params) {
+            MoviesDBHelper mdb = MoviesDBHelper.getInstance(getApplicationContext());
+           return mdb.addMovie(movie)!=-1;
+
+        }
+
+        @Override
+        protected void onPostExecute(Boolean result) {
+            if(result)
+            Toast.makeText(getApplicationContext(),R.string.msg_favourite_added,Toast.LENGTH_SHORT).show();
+            else
+                Toast.makeText(getApplicationContext(),R.string.msg_favourite_fail,Toast.LENGTH_SHORT).show();
+
         }
     }
 }
