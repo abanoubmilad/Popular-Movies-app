@@ -100,7 +100,7 @@ public class MovieDetailsActivityFragment extends Fragment {
         video = (TextView) rootView.findViewById(R.id.video);
 
 
-        ((TextView) rootView.findViewById(R.id.favourite)).setOnClickListener(new View.OnClickListener() {
+        rootView.findViewById(R.id.favourite).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 new AddFavouriteMovieTask().execute();
@@ -253,6 +253,7 @@ public class MovieDetailsActivityFragment extends Fragment {
                     try {
                         reader.close();
                     } catch (final IOException e) {
+                        return null;
                     }
                 }
             }
@@ -335,6 +336,7 @@ public class MovieDetailsActivityFragment extends Fragment {
                     try {
                         reader.close();
                     } catch (final IOException e) {
+                        return null;
                     }
                 }
             }
