@@ -1,6 +1,5 @@
 package com.example.abanoub.moviesdb;
 
-import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -44,9 +43,9 @@ public class MainActivityFragment extends Fragment {
         grid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent intent = new Intent(getActivity(), DetailsActivity.class);
-                intent.putExtra("movie", gridadapter.getItem(position));
-                startActivity(intent);
+
+                ((Callback) getActivity()).onItemSelected(gridadapter.getItem(position));
+
             }
         });
 

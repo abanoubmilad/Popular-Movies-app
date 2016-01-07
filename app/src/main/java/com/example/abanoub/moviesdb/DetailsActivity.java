@@ -10,11 +10,18 @@ public class DetailsActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_details);
-//        if (savedInstanceState == null) {
-//            getSupportFragmentManager().beginTransaction()
-//                    .add(R.id.fragment, new MovieDetailsActivityFragment())
-//                    .commit();
-//        }
+
+        if (savedInstanceState == null) {
+           Bundle arguments = new Bundle();
+          arguments.putSerializable("movie", getIntent().getSerializableExtra("movie"));
+
+            MovieDetailsActivityFragment fragment = new MovieDetailsActivityFragment();
+            fragment.setArguments(arguments);
+
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.details_fragment, fragment)
+                    .commit();
+       }
     }
 
 }

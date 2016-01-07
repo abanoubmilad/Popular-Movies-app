@@ -31,9 +31,6 @@ import java.net.URL;
 import java.util.ArrayList;
 
 
-/**
- * A placeholder fragment containing a simple view.
- */
 public class MovieDetailsActivityFragment extends Fragment {
     private ReviewsAdapter reviewsAdapter;
     private TrailersAdapter trailersAdapter;
@@ -48,41 +45,15 @@ public class MovieDetailsActivityFragment extends Fragment {
     public MovieDetailsActivityFragment() {
     }
 
-    public void setDetailsView(Movie movie) {
-
-        this.movie=movie;
-
-        original_language.setText(movie.getOriginal_language());
-        original_title.setText(movie.getOriginal_title());
-        release_date.setText(movie.getRelease_date());
-        vote_count.setText(movie.getVote_count());
-        vote_average.setText(movie.getVote_average());
-        overview.setText(movie.getOverview());
-        popularity.setText(movie.getPopularity());
-        title.setText(movie.getTitle());
-
-        if (movie.isAdult())
-            adult.setText("yes");
-        else
-            adult.setText("no");
-
-        if (movie.isHasVideo())
-            video.setText("yes");
-        else
-            video.setText("no");
-
-        Picasso
-                .with(getActivity())
-                .load("http://image.tmdb.org/t/p/w185" + movie.getPoster_path())
-                .into(poster);
-
-        new FetchReviewsTask().execute(movie.getId());
-        new FetchTrailersTask().execute(movie.getId());
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
+        Bundle arguments = getArguments();
+        if (arguments != null) {
+            movie = (Movie) arguments.getSerializable("movie");
+        }
 
         View rootView = inflater.inflate(R.layout.fragment_details, container, false);
 
@@ -177,9 +148,32 @@ public class MovieDetailsActivityFragment extends Fragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        Movie movie = (Movie) getActivity().getIntent().getSerializableExtra("movie");
-        if (movie != null)
-            setDetailsView(movie);
+        original_language.setText(movie.getOriginal_language());
+        original_title.setText(movie.getOriginal_title());
+        release_date.setText(movie.getRelease_date());
+        vote_count.setText(movie.getVote_count());
+        vote_average.setText(movie.getVote_average());
+        overview.setText(movie.getOverview());
+        popularity.setText(movie.getPopularity());
+        title.setText(movie.getTitle());
+
+        if (movie.isAdult())
+            adult.setText("yes");
+        else
+            adult.setText("no");
+
+        if (movie.isHasVideo())
+            video.setText("yes");
+        else
+            video.setText("no");
+
+        Picasso
+                .with(getActivity())
+                .load("http://image.tmdb.org/t/p/w185" + movie.getPoster_path())
+                .into(poster);
+
+        new FetchReviewsTask().execute(movie.getId());
+        new FetchTrailersTask().execute(movie.getId());
 
     }
 
