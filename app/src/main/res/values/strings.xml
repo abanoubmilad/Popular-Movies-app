@@ -27,6 +27,6 @@
         <item>highest rated</item>
         <item>favourites</item>
     </string-array>
-    <string name="title_activity_movie_details">Movie Details</string>
-    <string name="title_activity_main">Main</string>
+    <string name="title_activity_movie_details">Details</string>
+    <string name="title_activity_main">Movies</string>
 </resources>

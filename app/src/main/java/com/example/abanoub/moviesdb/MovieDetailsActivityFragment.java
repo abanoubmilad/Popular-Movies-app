@@ -34,14 +34,8 @@ import java.util.ArrayList;
 public class MovieDetailsActivityFragment extends Fragment {
     private ReviewsAdapter reviewsAdapter;
     private TrailersAdapter trailersAdapter;
-
-    private TextView adult, original_language,
-            original_title, overview,
-            release_date, popularity,
-            vote_average, vote_count, title, video;
-    private ImageView poster;
-
     private Movie movie;
+
     public MovieDetailsActivityFragment() {
     }
 
@@ -57,6 +51,11 @@ public class MovieDetailsActivityFragment extends Fragment {
 
         View rootView = inflater.inflate(R.layout.fragment_details, container, false);
 
+        TextView adult, original_language,
+                original_title, overview,
+                release_date, popularity,
+                vote_average, vote_count, title, video;
+        ImageView poster;
 
         original_language = (TextView) rootView.findViewById(R.id.original_language);
         original_title = (TextView) rootView.findViewById(R.id.original_title);
@@ -140,14 +139,6 @@ public class MovieDetailsActivityFragment extends Fragment {
             }
         });
 
-        return rootView;
-
-    }
-
-    @Override
-    public void onViewCreated(View view, Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-
         original_language.setText(movie.getOriginal_language());
         original_title.setText(movie.getOriginal_title());
         release_date.setText(movie.getRelease_date());
@@ -174,9 +165,9 @@ public class MovieDetailsActivityFragment extends Fragment {
 
         new FetchReviewsTask().execute(movie.getId());
         new FetchTrailersTask().execute(movie.getId());
+        return rootView;
 
     }
-
 
     public class FetchReviewsTask extends AsyncTask<String, Void, ArrayList<Review>> {
 
