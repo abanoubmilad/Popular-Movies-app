@@ -10,7 +10,16 @@ In this project, you’ll build an app to allow users to discover the most popul
 
 ##Mockups
 
-![](sample_runs/p1.png?raw=true)
-![](sample_runs/p2.png?raw=true)
-![](sample_runs/p3.png?raw=true)
-![](sample_runs/p4.png?raw=true)
+###(phone)
+
+![](p1.png?raw=true)
+![](p2.png?raw=true)
+![](p3.png?raw=true)
+![](p4.png?raw=true)
+![](p5.png?raw=true)
+
+###(tablet)
+
+![](t1.png?raw=true)
+![](t2.png?raw=true)
+![](t3.png?raw=true)
